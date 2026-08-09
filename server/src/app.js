@@ -1,0 +1,16 @@
+import cors from 'cors';
+import express from 'express';
+
+const app = express();
+
+app.use(cors({ origin: process.env.CLIENT_URL || 'http://localhost:5173' }));
+app.use(express.json());
+
+app.get('/api/health', (_request, response) => {
+  response.status(200).json({
+    status: 'ok',
+    service: 'road-rescue-hub-api',
+  });
+});
+
+export default app;
