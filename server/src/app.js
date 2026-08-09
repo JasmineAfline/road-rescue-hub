@@ -2,6 +2,7 @@ import cors from 'cors';
 import express from 'express';
 import authRoutes from './routes/authRoutes.js';
 import providerRoutes from './routes/providerRoutes.js';
+import adminRoutes from './routes/adminRoutes.js';
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.get('/api/health', (_request, response) => {
 
 app.use('/api/auth', authRoutes);
 app.use('/api/providers', providerRoutes);
+app.use('/api/admin', adminRoutes);
 
 app.use((error, _request, response, _next) => {
   console.error(error);
