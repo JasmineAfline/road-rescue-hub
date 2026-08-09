@@ -17,3 +17,14 @@ export function authenticate(mode, credentials) {
     body: JSON.stringify(credentials),
   });
 }
+
+export function searchProviders(filters = {}) {
+  const parameters = new URLSearchParams();
+
+  Object.entries(filters).forEach(([key, value]) => {
+    if (value) parameters.set(key, value);
+  });
+
+  const query = parameters.toString();
+  return request(`/providers${query ? `?${query}` : ''}`);
+}

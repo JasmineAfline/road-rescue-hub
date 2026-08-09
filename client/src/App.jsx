@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { authenticate } from './services/api.js';
+import ProviderDirectory from './components/ProviderDirectory.jsx';
 
 const roles = [
   ['vehicle_owner', 'Vehicle owner'],
@@ -22,6 +23,7 @@ function App() {
   const [form, setForm] = useState({ fullName: '', email: '', password: '', role: 'vehicle_owner' });
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [view, setView] = useState('auth');
   const isRegistering = mode === 'register';
 
   function updateField(event) {
@@ -50,6 +52,10 @@ function App() {
     setSession(null);
   }
 
+  if (view === 'directory') {
+    return <ProviderDirectory onBack={() => setView('auth')} />;
+  }
+
   if (session?.user) {
     return (
       <main className="welcome-page">
@@ -57,6 +63,7 @@ function App() {
           <p className="eyebrow">Signed in</p>
           <h1>Welcome, {session.user.fullName}</h1>
           <p>Your account is registered as <strong>{session.user.role.replaceAll('_', ' ')}</strong>.</p>
+          <button type="button" className="primary-button" onClick={() => setView('directory')}>Find providers</button>
           <button type="button" className="secondary-button" onClick={signOut}>Sign out</button>
         </section>
       </main>
@@ -69,6 +76,7 @@ function App() {
         <p className="eyebrow">Roadside assistance, made simple</p>
         <h1 id="page-title">Road Rescue Hub</h1>
         <p>Find trusted help for vehicle emergencies, repairs, spare parts, and oil when you need it.</p>
+        <button type="button" className="secondary-button directory-link" onClick={() => setView('directory')}>Browse providers</button>
 
         <div className="mode-switch" aria-label="Authentication mode">
           <button className={mode === 'login' ? 'active' : ''} type="button" onClick={() => setMode('login')}>Sign in</button>
