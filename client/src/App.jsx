@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { authenticate } from './services/api.js';
 import ProviderDirectory from './components/ProviderDirectory.jsx';
+import ProviderProfile from './components/ProviderProfile.jsx';
 
 const roles = [
   ['vehicle_owner', 'Vehicle owner'],
@@ -8,6 +9,7 @@ const roles = [
   ['spare_parts_seller', 'Spare-parts seller'],
   ['oil_dealer', 'Oil dealer'],
 ];
+const providerRoles = new Set(['mechanic', 'spare_parts_seller', 'oil_dealer']);
 
 function getStoredSession() {
   try {
@@ -56,6 +58,10 @@ function App() {
     return <ProviderDirectory onBack={() => setView('auth')} />;
   }
 
+  if (view === 'provider-profile' && session?.user) {
+    return <ProviderProfile session={session} onBack={() => setView('auth')} />;
+  }
+
   if (session?.user) {
     return (
       <main className="welcome-page">
@@ -64,6 +70,7 @@ function App() {
           <h1>Welcome, {session.user.fullName}</h1>
           <p>Your account is registered as <strong>{session.user.role.replaceAll('_', ' ')}</strong>.</p>
           <button type="button" className="primary-button" onClick={() => setView('directory')}>Find providers</button>
+          {providerRoles.has(session.user.role) && <button type="button" className="secondary-button profile-button" onClick={() => setView('provider-profile')}>Manage provider profile</button>}
           <button type="button" className="secondary-button" onClick={signOut}>Sign out</button>
         </section>
       </main>

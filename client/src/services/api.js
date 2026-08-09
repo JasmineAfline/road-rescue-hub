@@ -28,3 +28,21 @@ export function searchProviders(filters = {}) {
   const query = parameters.toString();
   return request(`/providers${query ? `?${query}` : ''}`);
 }
+
+function authenticatedOptions(token, options = {}) {
+  return {
+    ...options,
+    headers: { Authorization: `Bearer ${token}`, ...options.headers },
+  };
+}
+
+export function getMyProviderProfile(token) {
+  return request('/providers/me', authenticatedOptions(token));
+}
+
+export function saveProviderProfile(token, profile, exists) {
+  return request('/providers/me', authenticatedOptions(token, {
+    method: exists ? 'PATCH' : 'POST',
+    body: JSON.stringify(profile),
+  }));
+}
